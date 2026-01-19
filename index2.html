@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kitchen Order Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .order {
+      background: #1e293b;
+      border-left: 6px solid #22c55e;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+
+    .order h3 {
+      margin: 0 0 5px;
+    }
+
+    .order p {
+      margin: 3px 0;
+      color: #cbd5f5;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🍳 Kitchen Order Dashboard</h1>
+
+  <div id="orders"></div>
+
+  <script>
+    // 🔥 FIREBASE CONFIG (USE YOUR OWN)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "XXXX",
+      appId: "XXXX"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const ordersRef = database.ref("orders");
+
+    const ordersDiv = document.getElementById("orders");
+
+    ordersRef.on("child_added", snapshot => {
+      const order = snapshot.val();
+
+      const div = document.createElement("div");
+      div.className = "order";
+
+      div.innerHTML = `
+        <h3>Table: ${order.table}</h3>
+        <p>Item: ${order.item}</p>
+        <p>Quantity: ${order.quantity}</p>
+        <p>Time: ${new Date(order.time).toLocaleTimeString()}</p>
+      `;
+
+      ordersDiv.prepend(div);
+    });
+  </script>
+
+</body>
+</html>
